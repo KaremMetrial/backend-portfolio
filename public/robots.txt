@@ -1,0 +1,57 @@
+# Robots.txt for Alex Rivera Portfolio
+# https://alexriviera.dev/robots.txt
+
+# Allow all robots to index all pages
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://alexriviera.dev/sitemap.xml
+
+# Crawl delay to be respectful to servers
+Crawl-delay: 1
+
+# Allow indexing of main content
+Allow: /$
+Allow: /about
+Allow: /skills
+Allow: /projects
+Allow: /experience
+Allow: /contact
+
+# Disallow indexing of admin or sensitive areas (if any)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /uploads/temp/
+
+# Allow indexing of static assets
+Allow: /static/
+Allow: /assets/
+
+# Allow indexing of images
+Allow: /images/
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.gif
+Allow: *.webp
+
+# Allow indexing of CSS and JS for proper rendering
+Allow: *.css
+Allow: *.js
+
+# Google AdsBot
+User-agent: AdsBot-Google
+Allow: /
+
+# Bing Ads
+User-agent: bingbot
+Crawl-delay: 1
+
+# Yandex
+User-agent: Yandex
+Crawl-delay: 1
+
+# Baidu
+User-agent: Baiduspider
+Crawl-delay: 1
