@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface ContactData {
   email: string;
   phone: string | null;
   location: string;
-  socialLinks: {
+  availability: string | null;
+  social_links: {
     github?: string;
     linkedin?: string;
     twitter?: string;
@@ -32,28 +33,33 @@ export const useContact = (): UseContactReturn => {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('http://127.0.0.1:8000/api/contact');
-        
+
+        const response = await fetch("http://127.0.0.1:8000/api/contact");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
+
+        const responseData = await response.json();
+        const data = responseData.data;
+
         // Transform the API response to match our frontend types
-        // Note: API resources already decode JSON, so no need to parse again
         const transformedContact: ContactData = {
           email: data.email,
           phone: data.phone,
           location: data.location,
-          socialLinks: data.social_links,
-          contactFormConfig: data.contact_form_config
+          availability: data.availability,
+          social_links: data.social_links || {},
+          contactFormConfig: data.contact_form_config,
         };
-        
+
         setContact(transformedContact);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch contact content');
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to fetch contact content",
+        );
       } finally {
         setLoading(false);
       }

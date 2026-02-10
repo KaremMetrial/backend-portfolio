@@ -15,6 +15,9 @@ class HeroController extends Controller
     public function index()
     {
         $hero = Hero::first();
+        if (!$hero) {
+            return response()->json(['message' => 'Hero section not found'], 404);
+        }
         return new HeroResource($hero);
     }
 
@@ -37,9 +40,24 @@ class HeroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        // Since it's a singleton, we might ignore $id or ensure it matches the first record
+        $hero = Hero::firstOrFail(); // Simplified for singleton pattern
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string',
+            'title' => 'sometimes|string',
+            'subtitle' => 'sometimes|string',
+            'description' => 'sometimes|string',
+            'hero_image' => 'nullable|string',
+            'background_images' => 'nullable|array',
+            'stats' => 'sometimes|array',
+            'cta_buttons' => 'sometimes|array',
+        ]);
+
+        $hero->update($validated);
+        return new HeroResource($hero);
     }
 
     /**

@@ -16,10 +16,10 @@ class AboutResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'content' => $this->content,
-            'profile_image' => $this->profile_image,
-            'personal_details' => $this->personal_details ? json_decode($this->personal_details, true) : ['location' => '', 'email' => '', 'phone' => ''],
-            'fun_facts' => $this->fun_facts ? json_decode($this->fun_facts, true) : [],
+            'title' => $this->title,
+            'description' => $this->description,
+            'image' => $this->image,
+            'stats' => $this->stats ?? [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

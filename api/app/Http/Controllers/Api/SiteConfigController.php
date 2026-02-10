@@ -15,6 +15,9 @@ class SiteConfigController extends Controller
     public function index()
     {
         $siteConfig = SiteConfig::first();
+        if (!$siteConfig) {
+            return response()->json(['message' => 'Site config not found'], 404);
+        }
         return new SiteConfigResource($siteConfig);
     }
 
@@ -37,9 +40,20 @@ class SiteConfigController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $siteConfig = SiteConfig::firstOrFail();
+
+        $validated = $request->validate([
+            'site_title' => 'sometimes|string',
+            'meta_description' => 'nullable|string',
+            'theme_colors' => 'sometimes|array',
+            'footer_content' => 'sometimes|string',
+            'navbar_items' => 'sometimes|array',
+        ]);
+
+        $siteConfig->update($validated);
+        return new SiteConfigResource($siteConfig);
     }
 
     /**

@@ -1,55 +1,61 @@
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Skills from "./components/Skills";
+import Projects from "./components/Projects";
+import ExperienceTimeline from "./components/ExperienceTimeline";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import ExperienceTimeline from './components/ExperienceTimeline';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import { PerformanceMonitor } from './src/components/PerformanceMonitor';
-import { usePerformanceMonitoring } from './src/hooks/usePerformanceMonitoring';
+// Admin Imports
+import AdminLayout from "./src/admin/AdminLayout";
+import Dashboard from "./src/admin/Dashboard";
+import LoginPage from "./src/admin/pages/LoginPage";
+import ProtectedRoute from "./src/admin/components/ProtectedRoute";
+import HeroPage from "./src/admin/pages/HeroPage";
+import ProjectsPage from "./src/admin/pages/ProjectsPage";
+import ExperiencePage from "./src/admin/pages/ExperiencePage";
+import SkillsPage from "./src/admin/pages/SkillsPage";
+import AboutPage from "./src/admin/pages/AboutPage";
+import ContactPage from "./src/admin/pages/ContactPage";
+import SettingsPage from "./src/admin/pages/SettingsPage";
+import MessagesPage from "./src/admin/pages/MessagesPage";
 
-const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('home');
-  const { collectMetrics } = usePerformanceMonitoring();
+const Portfolio: React.FC = () => {
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
-    // Collect initial performance metrics
-    collectMetrics();
-    
-    // Preload critical resources
-    const link1 = document.createElement('link');
-    link1.rel = 'preload';
-    link1.as = 'style';
-    link1.href = '/assets/main.css';
-    document.head.appendChild(link1);
-
-    const link2 = document.createElement('link');
-    link2.rel = 'preload';
-    link2.as = 'script';
-    link2.href = '/assets/main.js';
-    document.head.appendChild(link2);
-
+    // Simple Scroll spy
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+      const sections = [
+        "home",
+        "about",
+        "skills",
+        "projects",
+        "experience",
+        "contact",
+      ];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
           const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
             setActiveSection(section);
           }
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [collectMetrics]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] selection:bg-indigo-500/30">
@@ -59,7 +65,7 @@ const App: React.FC = () => {
       <div className="fixed bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none -z-10" />
 
       <Navbar activeSection={activeSection} />
-      
+
       <main className="max-w-7xl mx-auto px-6 lg:px-12">
         <section id="home" className="min-h-screen flex items-center pt-20">
           <Hero />
@@ -87,8 +93,37 @@ const App: React.FC = () => {
       </main>
 
       <Footer />
-      <PerformanceMonitor />
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public Portfolio Route */}
+        <Route path="/" element={<Portfolio />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="messages" element={<MessagesPage />} />
+            <Route path="hero" element={<HeroPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="skills" element={<SkillsPage />} />
+            <Route path="experience" element={<ExperiencePage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+        </Route>
+
+        {/* 404 Redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

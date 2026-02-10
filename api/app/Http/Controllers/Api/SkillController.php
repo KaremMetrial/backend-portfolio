@@ -23,7 +23,15 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'category' => 'required|string',
+            'level' => 'nullable|integer',
+            'icon' => 'nullable|string',
+        ]);
+
+        $skill = Skill::create($validated);
+        return new SkillResource($skill);
     }
 
     /**
@@ -31,7 +39,8 @@ class SkillController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $skill = Skill::findOrFail($id);
+        return new SkillResource($skill);
     }
 
     /**
@@ -39,7 +48,17 @@ class SkillController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $skill = Skill::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string',
+            'category' => 'sometimes|string',
+            'level' => 'nullable|integer',
+            'icon' => 'nullable|string',
+        ]);
+
+        $skill->update($validated);
+        return new SkillResource($skill);
     }
 
     /**
@@ -47,6 +66,8 @@ class SkillController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $skill = Skill::findOrFail($id);
+        $skill->delete();
+        return response()->json(null, 204);
     }
 }

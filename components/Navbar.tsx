@@ -30,9 +30,9 @@ const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-lg">
-            B
+            K
           </div>
-          <span className="font-bold tracking-tight text-white hidden sm:inline">Backend_Architect</span>
+          <span className="font-bold tracking-tight text-white hidden sm:inline">Karem Sabry Metrial</span>
         </div>
 
         <div className="hidden md:flex items-center space-x-1">

@@ -23,7 +23,15 @@ class ExperienceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'role' => 'required|string',
+            'company' => 'required|string',
+            'period' => 'required|string',
+            'description' => 'required|array',
+        ]);
+
+        $experience = Experience::create($validated);
+        return new ExperienceResource($experience);
     }
 
     /**
@@ -31,7 +39,8 @@ class ExperienceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $experience = Experience::findOrFail($id);
+        return new ExperienceResource($experience);
     }
 
     /**
@@ -39,7 +48,17 @@ class ExperienceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $experience = Experience::findOrFail($id);
+
+        $validated = $request->validate([
+            'role' => 'sometimes|string',
+            'company' => 'sometimes|string',
+            'period' => 'sometimes|string',
+            'description' => 'sometimes|array',
+        ]);
+
+        $experience->update($validated);
+        return new ExperienceResource($experience);
     }
 
     /**
@@ -47,6 +66,8 @@ class ExperienceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $experience = Experience::findOrFail($id);
+        $experience->delete();
+        return response()->json(null, 204);
     }
 }

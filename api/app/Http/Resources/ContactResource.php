@@ -19,8 +19,9 @@ class ContactResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'location' => $this->location,
-            'social_links' => $this->social_links ? json_decode($this->social_links, true) : ['github' => '', 'linkedin' => '', 'twitter' => '', 'email' => ''],
-            'contact_form_config' => $this->contact_form_config ? json_decode($this->contact_form_config, true) : ['enabled' => false, 'fields' => []],
+            'availability' => $this->availability,
+            'social_links' => $this->social_links ?? ['github' => '', 'linkedin' => '', 'twitter' => '', 'email' => ''],
+            'contact_form_config' => $this->contact_form_config ?? ['enabled' => false, 'fields' => []],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

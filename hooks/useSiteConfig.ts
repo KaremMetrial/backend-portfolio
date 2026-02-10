@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface SiteConfigData {
   siteTitle: string;
@@ -33,28 +33,32 @@ export const useSiteConfig = (): UseSiteConfigReturn => {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('http://127.0.0.1:8000/api/site-config');
-        
+
+        const response = await fetch("http://127.0.0.1:8000/api/site-config");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
+
+        const responseData = await response.json();
+        const data = responseData.data;
+
         // Transform the API response to match our frontend types
-        // Note: API resources already decode JSON, so no need to parse again
         const transformedSiteConfig: SiteConfigData = {
           siteTitle: data.site_title,
           metaDescription: data.meta_description,
           themeColors: data.theme_colors,
           footerContent: data.footer_content,
-          navbarItems: data.navbar_items
+          navbarItems: data.navbar_items,
         };
-        
+
         setSiteConfig(transformedSiteConfig);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch site configuration');
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to fetch site configuration",
+        );
       } finally {
         setLoading(false);
       }

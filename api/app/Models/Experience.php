@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Experience extends Model
 {
+    protected $guarded = [];
+
+    protected $casts = [
+        'description' => 'array',
+    ];
+
     //
 }

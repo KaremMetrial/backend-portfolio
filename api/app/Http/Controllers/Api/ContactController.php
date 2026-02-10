@@ -15,6 +15,9 @@ class ContactController extends Controller
     public function index()
     {
         $contact = Contact::first();
+        if (!$contact) {
+            return response()->json(['message' => 'Contact info not found'], 404);
+        }
         return new ContactResource($contact);
     }
 
@@ -37,9 +40,20 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $contact = Contact::firstOrFail();
+
+        $validated = $request->validate([
+            'email' => 'sometimes|email',
+            'phone' => 'sometimes|string',
+            'location' => 'sometimes|string',
+            'social_links' => 'sometimes|array',
+            'availability' => 'sometimes|string',
+        ]);
+
+        $contact->update($validated);
+        return new ContactResource($contact);
     }
 
     /**

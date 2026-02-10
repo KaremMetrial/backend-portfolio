@@ -28,10 +28,18 @@ class ImageController extends Controller
             ],
         ]);
 
+        \Log::info('Image upload request:', [
+            'type' => $request->input('type'),
+            'has_file' => $request->hasFile('image'),
+            'file_name' => $request->file('image')?->getClientOriginalName(),
+            'mime' => $request->file('image')?->getClientMimeType(),
+        ]);
+
         if ($validator->fails()) {
+            \Log::warning('Image upload validation failed:', $validator->errors()->toArray());
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid image or type',
+                'message' => 'Validation failed',
                 'errors' => $validator->errors(),
             ], 422);
         }

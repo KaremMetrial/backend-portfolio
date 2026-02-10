@@ -1,14 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface AboutData {
-  content: string;
-  profileImage: string | null;
-  personalDetails: {
-    location: string;
-    email: string;
-    phone?: string;
-  };
-  funFacts: string[] | null;
+  title: string;
+  description: string;
+  image: string | null;
+  stats: { label: string; value: string }[];
 }
 
 interface UseAboutReturn {
@@ -27,27 +23,29 @@ export const useAbout = (): UseAboutReturn => {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('http://127.0.0.1:8000/api/about');
-        
+
+        const response = await fetch("http://127.0.0.1:8000/api/about");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
+
+        const responseData = await response.json();
+        const data = responseData.data;
+
         // Transform the API response to match our frontend types
-        // Note: API resources already decode JSON, so no need to parse again
         const transformedAbout: AboutData = {
-          content: data.content,
-          profileImage: data.profile_image,
-          personalDetails: data.personal_details,
-          funFacts: data.fun_facts
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          stats: Array.isArray(data.stats) ? data.stats : [],
         };
-        
+
         setAbout(transformedAbout);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch about content');
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch about content",
+        );
       } finally {
         setLoading(false);
       }

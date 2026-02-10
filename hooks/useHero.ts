@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface HeroData {
   name: string;
@@ -34,17 +34,17 @@ export const useHero = (): UseHeroReturn => {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('http://127.0.0.1:8000/api/hero');
-        
+
+        const response = await fetch("http://127.0.0.1:8000/api/hero");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
+
+        const responseData = await response.json();
+        const data = responseData.data;
+
         // Transform the API response to match our frontend types
-        // Note: API resources already decode JSON, so no need to parse again
         const transformedHero: HeroData = {
           name: data.name,
           title: data.title,
@@ -53,12 +53,14 @@ export const useHero = (): UseHeroReturn => {
           heroImage: data.hero_image,
           backgroundImages: data.background_images,
           stats: data.stats,
-          ctaButtons: data.cta_buttons
+          ctaButtons: data.cta_buttons,
         };
-        
+
         setHero(transformedHero);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch hero content');
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch hero content",
+        );
       } finally {
         setLoading(false);
       }
